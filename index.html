@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                $("#btnClick").click(function () {
+                    //alert("Hey");
+                    if ($('#txtCalendar').val().length < 1 ||
+                            $('#txtSalary').val().length < 1 ||
+                            $('#txtExpectedSave').val().length < 1 ||
+                            $('#txtSaved').val().length < 1) {
+                        return;
+                    }
+                    else {
+                        var date =  encodeURIComponent($('#txtCalendar').val());
+                        var salary = $('#txtSalary').val();
+                        var expected = $('#txtExpectedSave').val();
+                        var saved = $('#txtSaved').val();
+
+                        window.location.href = "calculate.html?date=" + date + "&salary=" +   Number(salary) + "&savings=" +  Number(expected) + "&saved=" +  Number(saved);
+                    }
+                });
+                //return false;
+
+                $(function () {
+                    $("#txtCalendar").datepicker();
+                });
+            });
+           
+        </script>
+        <title>Input Variables</title>
+        <link rel="Stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/south-street/jquery-ui.css" />
+        <link href="main.css" rel="stylesheet" type="text/css" />
+        <link href='//fonts.googleapis.com/css?family=Permanent+Marker|Luckiest+Guy|Rock+Salt' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div id="center">
+            <div class="countdown"><label class="label">Date:</label><input class="output" type="text" id="txtCalendar" /></div>
+            <div class="countdown"><label class="label">Salary:</label><input class="output" type="text" id="txtSalary" /></div>
+            <div class="countdown"><label class="label">Expected Savings:</label><input class="output" type="text" id="txtExpectedSave" /></div>
+            <div class="countdown"><label class="label">Saved so Far:</label><input class="output" type="text" id="txtSaved" /></div>
+            <div class="countdown"><input id="btnClick" class="output" type="button" value="Calculate" /></div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script type="text/javascript">
+
+            var _SALARY;
+            var _EXPECTEDSAVINGS;
+            var _SAVED;
+            var _EXPECTEDDATE;
+
+            $(document).ready(function () {
+                $.extend({
+                    getUrlVars: function () {
+                        var vars = [], hash;
+                        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                        for (var i = 0; i < hashes.length; i++) {
+                            hash = hashes[i].split('=');
+                            vars.push(hash[0]);
+                            vars[hash[0]] = hash[1];
+                        }
+                        return vars;
+                    },
+                    getUrlVar: function (name) {
+                        return $.getUrlVars()[name];
+                    }
+                });
+                ///////INPUT VARIABLES HERE
+                _SALARY = $.getUrlVar('salary');
+                _EXPECTEDSAVINGS = $.getUrlVar('savings');
+                _SAVED = $.getUrlVar('saved');
+                _EXPECTEDDATE = $.getUrlVar('date');
+                _EXPECTEDDATE = decodeURIComponent(_EXPECTEDDATE);
+
+                _EXPECTEDDATE = new Date(_EXPECTEDDATE);
+
+                $(function () {
+                    $("#txtCalendar").datepicker();
+                    $("#txtCalendar2").datepicker();
+                });
+                calculateTime();
+            });
+
+
+            function calculateTime() {
+                ////CREATE VARIABLES FOR TIME
+                var 
+                oneDay = 60 * 60 * 24 * 1000,
+                oneMonth = oneDay * 30,
+                oneYear = oneMonth * 12,
+                oneHour = 1000 * 60 * 60,
+                oneMinute = 60 * 1000,
+                oneSecond = 1000;
+
+                ////GET TODAYS DATE
+                var dToday = new Date();
+
+                ////GET DIFFERENCE BETWEEN TODAY AND _EXPECTEDDATE
+                var diff = Math.floor(_EXPECTEDDATE - dToday);
+
+                ////PLACE DATE IN TEXTBOXES
+                $('#txtCalendar').val(_EXPECTEDDATE);
+                $('#txtCalendar2').val(_EXPECTEDDATE);
+                
+                ////CALCULATE YEARS TILL DATE
+                var years = (diff / oneYear) + ' years';
+                $('#years').html(years);
+
+                ////CALCULATE MONTHS AND DAYS (30 DAYS)
+                var oneMonth = (diff / oneMonth);
+                var remainder = Math.floor((diff % oneMonth));
+                $("#months").html(Math.floor(oneMonth) + ' months ' + remainder + ' days');
+
+                ////CALCULATE DAYS TILL DATE
+                var days = Math.floor((diff / oneDay)) + ' days';
+                $('#days').html(days);
+
+                ////CALCULATE HOURS TILL DATE
+                var hours = Math.floor((diff / oneHour)) + ' hours';
+                $('#hours').html(hours);
+
+                ////CALCULATE MINUTES TILL DATE
+                var minutes = Math.floor(diff / oneMinute) + ' minutes';
+                $('#minutes').html(minutes);
+
+                ////CALCULATE SECONDS TILL DATE
+                var seconds = Math.floor(diff / oneSecond) + ' seconds';
+                $('#seconds').html(seconds);
+                
+                ////CALCULATE PAYCHECKS LEFT TILL DATE BASED ON 2 PER MONTH
+                var paychecks = (oneMonth * 2);
+                $('#paychecks').html(Math.floor(paychecks));
+                $('#salary').html('$ ' + _SALARY);
+
+                ////CALCULATE GROSS IN THE TIME TILL DATE
+                var gross = (_SALARY * paychecks);
+                $('#gross').html('$ ' + gross.toFixed(2));
+
+                ////DISPLAY SOME OF THE INPUT VARIABLES
+                $('#expectedsavings').html('$ ' + _EXPECTEDSAVINGS);
+                $('#saved').html('$ ' + Number(_SAVED).toFixed(2));
+
+                ////CALCULATE HOW MUCH I NEED TO SAVE FOR MY GOAL
+                var needToSave = _EXPECTEDSAVINGS - _SAVED;
+                $('#needtosave').html('$ ' + Number(needToSave).toFixed(2));
+
+                ////CALCULATE SAVE PLAN FOR MY GOAL PER MONTHS
+                var saveplan = needToSave / Math.floor(oneMonth);
+                $('#saveplan').html('$ ' + Number(saveplan).toFixed(2) + ' per month');
+
+                ////CALCULATE SAVE PLAN FOR MY GOAL PER PAYCHECK
+                var percheck = needToSave / paychecks;
+                $('#percheck').html('$ ' + Number(percheck).toFixed(2) + ' per paychheck');
+            }
+        </script>
+        <link rel="Stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/south-street/jquery-ui.css" />
+        <link href="main.css" rel="stylesheet" type="text/css" />
+        <link href='//fonts.googleapis.com/css?family=Permanent+Marker|Luckiest+Guy|Rock+Salt' rel='stylesheet' type='text/css'>
+        <title>DAY / PAY To date Tracker</title>
+	</head>
+	<body>
+        <div id="center">
+            <h1>Days till Date</h1>
+			<input type="text" id="txtCalendar" />
+            <div class="countdown" id="dYears"><label class="label" id="lblYears">Years:</label><label class="output" id="years"></label></div>
+			<div class="countdown" id="dMonths"><label class="label" id="lblMonths">Months:</label><label class="output" id="months"></label></div>
+			<div class="countdown" id="dDays"><label class="label" id="lblDays">Days:</label><label class="output" id="days"></label></div>
+			<div class="countdown" id="dHours"><label class="label" id="lblHours">Hours:</label><label class="output" id="hours"></label></div>
+            <div class="countdown" id="dMin"><label class="label" id="lblMin">Minutes:</label><label class="output" id="minutes"></label></div>
+            <div class="countdown" id="dSec"><label class="label" id="lblSec">Seconds:</label><label class="output" id="seconds"></label></div>
+            <br />
+            <hr />
+            <br />
+            <h2>Paychecks till Date</h2>
+            <input type="text" id="txtCalendar2" />
+            <div class="countdown" id="dPaychecks"><label class="label" id="lblPaychecks">PayChecks:</label><label class="output" id="paychecks"></label></div>
+            <div class="countdown" id="dGross"><label class="label" id="lblGross">Gross Pay:</label><label class="output" id="gross"></label></div>
+            <div class="countdown" id="dSalary"><label class="label" id="lblSalary">Salary Per Check:</label><label class="output" id="salary"></label></div>
+            <div class="countdown" id="dExpectedSavings"><label class="label" id="lblExpected">Expected Savings:</label><label class="output" id="expectedsavings"></label></div>
+            <div class="countdown" id="dSaved"><label class="label" id="lblSaved">Saved So Far:</label><label class="output" id="saved"></label></div>
+            <div class="countdown" id="dNeedToSave"><label class="label" id="lblNeedToSave">Need to Save:</label><label class="output" id="needtosave"></label></div>
+            <div class="countdown" id="dSavePlan"><label class="label" id="lblSavePlan">Saving Plan:</label><label class="output" id="saveplan"></label></div>
+            <div class="countdown" id="Div1"><label class="label" id="Label2">Per Check Save Plan:</label><label class="output" id="percheck"></label></div>
+            <br />
+        </div>
+	</body>
+</html>
